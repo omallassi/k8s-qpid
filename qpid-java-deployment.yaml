@@ -1,0 +1,37 @@
+#apiVersion: apps/v1alpha1
+#kind: PetSet
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: qpid-java-broker
+spec:
+  #serviceName: qpid-java
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: qpid-java-broker
+      #annotations:
+      #  pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      #terminationGracePeriodSeconds: 0
+      containers:
+      - name: qpid-java-broker
+        image: docker-qpid-java:v0.1.0
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: rest
+        - containerPort: 5672
+          name: amqp
+      #  volumeMounts:
+      #  - name: qpid-java-storage
+      #    mountPath: /tmp
+  #volumeClaimTemplates:
+  #- metadata: 
+  #    name: qpid-java-storage
+  #  spec:
+  #    accessModes: [ "ReadWriteOnce" ]
+  #    resources:
+  #      requests:
+  #        storage: 10Mi

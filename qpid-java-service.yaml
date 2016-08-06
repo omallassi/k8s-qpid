@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: qpid-java-service
+  labels:
+    app: qpid-java
+spec:
+  ports:
+  - port: 5672
+    name: amqp
+  - port: 8080
+    name: rest
+  # *.nginx.default.svc.cluster.local
+  # In case we would have use petset, it looks like we would have well known
+  # host name
+  clusterIP: None #Headless service
+  selector:
+    app: qpid-java-broker
