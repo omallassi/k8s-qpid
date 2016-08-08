@@ -10,7 +10,7 @@ spec:
     metadata:
       name: qdrouterd
       labels:
-        name: qdrouterd
+        app: qdrouterd
     spec:
       containers:
         - image: scholzj/qpid-dispatch:0.6.0
@@ -36,6 +36,30 @@ spec:
                       host: 172.17.0.4
                       port: 5672
                       linkCapacity: 1000
+                    }
+                    address {
+                      prefix: instruction
+                      waypoint: yes
+                    }
+                    autoLink {
+                        addr: instruction
+                        dir: in
+                        connection: shard_0
+                    }
+                    autoLink {
+                        addr: instruction
+                        dir: out
+                        connection: shard_0
+                    }
+                    autoLink {
+                        addr: instruction
+                        dir: in
+                        connection: shard_1
+                    }
+                    autoLink {
+                        addr: instruction
+                        dir: out
+                        connection: shard_1
                     }
           ports:
             - containerPort: 5672
