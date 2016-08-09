@@ -13,7 +13,7 @@ spec:
         app: qdrouterd
     spec:
       containers:
-        - image: scholzj/qpid-dispatch:0.6.0
+        - image: qpid-dispatch:0.6.1  #scholzj/qpid-dispatch:0.6.0
           name: qdrouterd
           #imagePullPolicy: Always
           env:
@@ -21,46 +21,64 @@ spec:
               value: admin
             - name:  QDROUTERD_ADMIN_PASSWORD
               value: "123456"
-            - name: QDROUTERD_CONFIG_INSET
+            - name: QDROUTERD_CONFIG_OPTIONS
               value: |
-                    connector {
-                      name: shard_0
-                      role: route-container
-                      host: 172.17.0.5
-                      port: 5672
-                      linkCapacity: 1000
-                    }
-                    connector {
-                      name: shard_1
-                      role: route-container
-                      host: 172.17.0.4
-                      port: 5672
-                      linkCapacity: 1000
-                    }
-                    address {
-                      prefix: instruction
-                      waypoint: yes
-                    }
-                    autoLink {
-                        addr: instruction
-                        dir: in
-                        connection: shard_0
-                    }
-                    autoLink {
-                        addr: instruction
-                        dir: out
-                        connection: shard_0
-                    }
-                    autoLink {
-                        addr: instruction
-                        dir: in
-                        connection: shard_1
-                    }
-                    autoLink {
-                        addr: instruction
-                        dir: out
-                        connection: shard_1
-                    }
+                router {
+                  mode: standalone
+                  id: ZTZiNmVlZTM2ZjljZDA2N2MwY2I2NWI3
+                  workerThreads: 4
+                } 
+                listener {
+                  role: normal
+                  host: 0.0.0.0
+                  port: 10452
+                  linkCapacity: 1000
+                }
+                log {
+                  module: DEFAULT
+                  enable: trace+
+                  timestamp: true
+                }
+                connector {
+                  name: shard_0
+                  role: route-container
+                  host: 172.17.0.5
+                  port: 5672
+                  linkCapacity: 1000
+                }
+                connector {
+                  name: shard_1
+                  role: route-container
+                  host: 172.17.0.4
+                  port: 5672
+                  linkCapacity: 1000
+                }
+                address {
+                  prefix: instruction
+                  waypoint: yes
+                }
+                autoLink {
+                    addr: instruction
+                    dir: in
+                    connection: shard_0
+                }
+                autoLink {
+                    addr: instruction
+                    dir: out
+                    connection: shard_0
+                }
+                autoLink {
+                    addr: instruction
+                    dir: in
+                    connection: shard_1
+                }
+                autoLink {
+                    addr: instruction
+                    dir: out
+                    connection: shard_1
+                }
+            - name: QDROUTERD_SSL_AUTHENTICATE_PEER
+              value: "false"
           ports:
-            - containerPort: 5672
+            - containerPort: 10452
               name: amqp
